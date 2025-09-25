@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Quiz - Admin</title>
+  <link rel="stylesheet" th:href="@{/cquiz.css}">
+  <script th:src="@{/cquiz.js}" defer></script>
+</head>
+<body>
+<div class="container">
+  <h1>Create New Quiz</h1>
+
+  <form id="quizForm" th:action="@{/admin/quizzes/create}" th:object="${quiz}" method="post">
+
+    <div>
+      <label>Quiz Title:</label><br/>
+      <input type="text" th:field="*{title}" placeholder="Enter quiz title" required />
+    </div>
+
+    <div>
+      <label>Quiz Description:</label><br/>
+      <textarea th:field="*{description}" placeholder="Enter description" required></textarea>
+    </div>
+
+    <div>
+      <label>Time Limit (minutes):</label><br/>
+      <input type="number" th:field="*{timeLimit}" placeholder="Time in minutes" min="1" required />
+    </div>
+
+    <hr/>
+
+    <h2>Questions</h2>
+
+    <!-- Questions container -->
+    <div id="questionsContainer">
+      <!-- If quiz has existing questions, render them -->
+      <div th:if="${quiz.questions != null}" th:each="question, qStat : ${quiz.questions}"
+           class="question-block" data-index="${qStat.index}">
+        <h3>Question <span th:text="${qStat.index + 1}"></span></h3>
+
+        <label>Question Text</label><br/>
+        <input type="text"
+               class="question-text"
+               th:attr="name=|questions[${qStat.index}].text|"
+               th:value="${question.text}" required />
+
+        <div class="options">
+          <div th:each="opt, oStat : ${question.options}" class="option-block">
+            <label>Option <span th:text="${oStat.index + 1}"></span></label>
+            <input type="text"
+                   class="option-text"
+                   th:attr="name=|questions[${qStat.index}].options[${oStat.index}].text|"
+                   th:value="${opt.text}" required />
+
+            <!-- Hidden field for existing option id (useful for update) -->
+            <input type="hidden"
+                   class="option-id"
+                   th:if="${opt.id != null}"
+                   th:attr="name=|questions[${qStat.index}].options[${oStat.index}].id|"
+                   th:value="${opt.id}" />
+
+            <!-- Hidden false + checkbox pattern for boolean binding -->
+            <input type="hidden"
+                   class="option-correct-hidden"
+                   th:attr="name=|questions[${qStat.index}].options[${oStat.index}].correct|"
+                   value="false" />
+            <label>
+              <input type="checkbox"
+                     class="option-correct-checkbox"
+                     th:attr="name=|questions[${qStat.index}].options[${oStat.index}].correct|"
+                     th:checked="${opt.correct}" value="true" />
+              Correct
+            </label>
+
+            <button type="button" class="remove-option" onclick="removeOption(this)">Remove Option</button>
+          </div>
+        </div>
+
+        <div style="margin-top:8px;">
+          <button type="button" onclick="addOptionForQuestion(/*qIndex placeholder*/ ${qStat.index})">Add Option</button>
+          <button type="button" onclick="removeQuestion(this)">Remove Question</button>
+        </div>
+
+        <hr/>
+      </div>
+
+      <!-- If no questions from server, render a single empty question (index 0) -->
+      <div th:if="${quiz.questions == null or #lists.isEmpty(quiz.questions)}" class="question-block" data-index="0">
+        <h3>Question 1</h3>
+        <label>Question Text</label><br/>
+        <input type="text" class="question-text" name="questions[0].text" required />
+
+        <div class="options">
+          <div class="option-block">
+            <label>Option 1</label>
+            <input type="text" class="option-text" name="questions[0].options[0].text" required />
+            <input type="hidden" class="option-correct-hidden" name="questions[0].options[0].correct" value="false" />
+            <label><input type="checkbox" class="option-correct-checkbox" name="questions[0].options[0].correct" value="true" /> Correct</label>
+            <button type="button" class="remove-option" onclick="removeOption(this)">Remove Option</button>
+          </div>
+
+          <div class="option-block">
+            <label>Option 2</label>
+            <input type="text" class="option-text" name="questions[0].options[1].text" required />
+            <input type="hidden" class="option-correct-hidden" name="questions[0].options[1].correct" value="false" />
+            <label><input type="checkbox" class="option-correct-checkbox" name="questions[0].options[1].correct" value="true" /> Correct</label>
+            <button type="button" class="remove-option" onclick="removeOption(this)">Remove Option</button>
+          </div>
+        </div>
+
+        <div style="margin-top:8px;">
+          <button type="button" onclick="addOptionForQuestion(0)">Add Option</button>
+          <button type="button" onclick="removeQuestion(this)">Remove Question</button>
+        </div>
+        <hr/>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <button type="button" id="addQuestionBtn">+ Add Question</button>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button type="submit">Create Quiz</button>
+    </div>
+  </form>
+</div>
+
+<!-- Template used by JS for new questions (not rendered by server) -->
+<template id="question-template">
+  <div class="question-block" data-index="__Q_INDEX__">
+    <h3>Question __DISPLAY_INDEX__</h3>
+
+    <label>Question Text</label><br/>
+    <input type="text" class="question-text" name="questions[__Q_INDEX__].text" required />
+
+    <div class="options">
+      <div class="option-block">
+        <label>Option 1</label>
+        <input type="text" class="option-text" name="questions[__Q_INDEX__].options[0].text" required />
+        <input type="hidden" class="option-correct-hidden" name="questions[__Q_INDEX__].options[0].correct" value="false" />
+        <label><input type="checkbox" class="option-correct-checkbox" name="questions[__Q_INDEX__].options[0].correct" value="true" /> Correct</label>
+        <button type="button" class="remove-option" onclick="removeOption(this)">Remove Option</button>
+      </div>
+    </div>
+
+    <div style="margin-top:8px;">
+      <button type="button" onclick="addOptionForQuestion(__Q_INDEX__)">Add Option</button>
+      <button type="button" onclick="removeQuestion(this)">Remove Question</button>
+    </div>
+
+    <hr/>
+  </div>
+</template>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz List</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+  <script th:src="@{/script.js}" defer></script>
+</head>
+<body>
+<h1>Available Quizzes</h1>
+
+
+<!-- If no quizzes exist -->
+<div th:if="${#lists.isEmpty(quizzes)}">
+  <p>No quizzes available.</p>
+</div>
+
+<!-- Quiz Table -->
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Time Limit (min)</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="quiz : ${quizzes}">
+    <td th:text="${quiz.title}"></td>
+    <td th:text="${quiz.description}"></td>
+    <td th:text="${quiz.timeLimit}"></td>
+    <td>
+      <!-- For participants -->
+      <a th:href="@{/quiz/take/{id}(id=${quiz.id})}">Take Quiz</a>
+
+      <!-- For admins only -->
+      <span sec:authorize="hasRole('ROLE_ADMIN')">
+   | <a th:href="@{/admin/quiz/edit/{id}(id=${quiz.id})}">Edit</a>
+   | <a th:href="@{/admin/quiz/delete/{id}(id=${quiz.id})}"
+        onclick="return confirm('Are you sure you want to delete this quiz?');">
+        Delete
+     </a>
+</span>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- Admin create quiz button -->
+
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+  <br/>
+  <a th:href="@{/admin/quiz/create}">
+    <button type="button">+ Create New Quiz</button>
+  </a>
+</div>
+
+</body>
+</html>

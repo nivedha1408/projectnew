@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Quiz</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h2>Edit Quiz</h2>
+
+<form th:action="@{/admin/quizzes/edit/{id}(id=${quiz.id})}" th:object="${quiz}" method="post">
+  <label>Title:</label>
+  <input type="text" th:field="*{title}" /><br/><br/>
+
+  <label>Description:</label>
+  <textarea th:field="*{description}"></textarea><br/><br/>
+
+  <label>Time Limit (minutes):</label>
+  <input type="number" th:field="*{timeLimit}" /><br/><br/>
+
+  <button type="submit">Update Quiz</button>
+</form>
+</body>
+</html>

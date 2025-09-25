@@ -1,0 +1,141 @@
+/* ===== GLOBAL BASE (already included) ===== */
+body {
+    background-color: #f4f7fb;
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+h1, h2, h3 {
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* ===== FORM FIELDS ===== */
+form label {
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: inline-block;
+}
+
+form input[type="text"],
+form input[type="number"],
+form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border 0.2s;
+}
+
+form input:focus,
+form textarea:focus {
+    border-color: #2980b9;
+    outline: none;
+}
+
+/* ===== QUESTION BLOCKS ===== */
+.question-block {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.question-block h3 {
+    margin-bottom: 10px;
+    color: #34495e;
+}
+
+/* ===== OPTION BLOCKS ===== */
+.option-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+    padding: 8px;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+
+.option-block input[type="text"] {
+    flex: 1;
+}
+
+.option-block label {
+    font-weight: normal;
+    margin: 0 5px;
+}
+
+/* ===== BUTTONS ===== */
+button {
+    background: #2980b9;
+    color: #fff;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #1c5980;
+}
+
+button.remove-option,
+button.remove-question {
+    background: #e74c3c;
+}
+
+button.remove-option:hover,
+button.remove-question:hover {
+    background: #c0392b;
+}
+
+#addQuestionBtn {
+    background: #27ae60;
+    margin-top: 10px;
+}
+
+#addQuestionBtn:hover {
+    background: #1e8449;
+}
+
+/* ===== SEPARATORS ===== */
+hr {
+    border: none;
+    height: 1px;
+    background: #e1e1e1;
+    margin: 15px 0;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+form button[type="submit"] {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+    margin-top: 15px;
+    background: #2980b9;
+}
+
+form button[type="submit"]:hover {
+    background: #1c5980;
+}

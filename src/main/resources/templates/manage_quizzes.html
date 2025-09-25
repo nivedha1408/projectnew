@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Quizzes - Admin</title>
+    <link rel="stylesheet" th:href="@{/mquiz.css}">
+    <script th:src="@{/mquiz.js}" defer></script>
+</head>
+<body>
+<div class="container">
+    <h1>Manage Quizzes</h1>
+
+    <!-- Create Quiz Button -->
+    <div class="create-section">
+        <a class="btn btn-primary" th:href="@{/admin/quizzes/create}">+ Create New Quiz</a>
+    </div>
+        <tr th:each="quiz, stat : ${quizzes}">
+            <td th:text="${stat.index + 1}"></td>
+            <td th:text="${quiz.title}"></td>
+            <td th:text="${quiz.description}"></td>
+            <td th:text="${quiz.timeLimit}"></td>
+            <td>
+                <!-- Edit Quiz -->
+                <a th:href="@{/admin/quizzes/edit/{id}(id=${quiz.id})}">
+                    <button>Edit</button>
+                </a>
+                <!-- Delete Quiz -->
+                <a th:href="@{/admin/quizzes/delete/{id}(id=${quiz.id})}"
+                   onclick="return confirm('Are you sure you want to delete this quiz?');">
+                    <button>Delete</button>
+                </a>
+
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(quizzes)}">
+            <td colspan="5" style="text-align:center;">No quizzes available.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Button to Create New Quiz -->
+    <div style="margin-top: 20px; text-align:center;">
+        <a th:href="@{/admin/quizzes/create}">
+            <button>+ Create New Quiz</button>
+        </a>
+    </div>
+</div>
+</body>
+</html>
