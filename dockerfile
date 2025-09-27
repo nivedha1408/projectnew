@@ -1,15 +1,15 @@
-# Build stage (Maven + supported JDK)
-FROM maven:3.9.3-eclipse-temurin-20 AS build
+# Build stage
+FROM maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY . .
 RUN mvn clean package -DskipTests
 
-# Run stage (JDK 24 runtime if needed)
-FROM openjdk:24-jdk-slim
+# Run stage
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/target/Quiznew-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8081
 ENTRYPOINT ["java","-jar","/app.jar"]
+
 
 
